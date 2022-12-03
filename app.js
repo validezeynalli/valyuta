@@ -1,15 +1,18 @@
+
+let inp1 = document.querySelector(".inp1");
+let inp2 = document.querySelector(".inp2");
+let valuta1 = document.querySelector(".valuta1");
+let valuta2 = document.querySelector(".valuta2");
 let Container = document.querySelector(".country-valuta");
-let inputFrom = document.querySelector(".input_from");
-let inputTo = document.querySelector(".input_to");
-let valutaParagraphFrom = document.querySelector(".valuta_paragraph_from");
-let valutaParagraphTo = document.querySelector(".valuta_paragraph_to");
 let from, to;
+
 eventListeners();
 function eventListeners() {
   Container.addEventListener("click", handleValueta);
-  inputFrom.addEventListener("keyup", getDataByFrom);
-  inputTo.addEventListener("keyup", getDataByTo);
+  inp1.addEventListener("keyup", getDataByFrom);
+  inp2.addEventListener("keyup", getDataByTo);
 }
+
 function handleValueta(e) {
   let targetSpace = e.target;
   Array.from(targetSpace.parentElement.children).forEach((x) =>x.removeAttribute("style"));
@@ -23,17 +26,18 @@ function handleValueta(e) {
     getDataByFrom();
   }
 }
+
 async function getDataByFrom() {
   const res = await fetch(`https://api.exchangerate.host/latest?base=${from}&symbols=${to}`);
   const data = await res.json();
-  inputTo.value =( Object.values(data.rates)[0] * inputFrom.value.replace(",",".")).toFixed(2);
+  inp2.value =( Object.values(data.rates)[0] * inp1.value.replace(",",".")).toFixed(2);
   if(from && to){
-  valutaParagraphFrom.textContent = `1 ${data.base} = ${Object.values(data.rates)[0].toFixed(2)} ${Object.keys(data.rates)}`;
-  valutaParagraphTo.textContent = `1 ${Object.keys(data.rates)} = ${(1/Object.values(data.rates)[0]).toFixed(2)} ${data.base}`;
+  valuta1.textContent = `1 ${data.base} = ${Object.values(data.rates)[0].toFixed(2)} ${Object.keys(data.rates)}`;
+  valuta2.textContent = `1 ${Object.keys(data.rates)} = ${(1/Object.values(data.rates)[0]).toFixed(2)} ${data.base}`;
   }
 }
 async function getDataByTo() {
   const res = await fetch(`https://api.exchangerate.host/latest?base=${from}&symbols=${to}`);
   const data = await res.json();
-  inputFrom.value = (inputTo.value.replace(",",".") / Object.values(data.rates)[0]).toFixed(2);
+  input1.value = (input2.value.replace(",",".") / Object.values(data.rates)[0]).toFixed(2);
 }
